@@ -1,0 +1,78 @@
+import json
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.autograd import Variable
+import numpy as np
+
+class WordEmbedding(nn.Module):
+    '''
+    Create word embeddings for questions and column names
+    '''
+    def __init__(self, word_emb, N_word, gpu, SQL_TOK,
+     trainable=False):
+        super(WordEmbedding, self).__init__()
+        self.trainable = trainable
+        self.N_word = N_word
+        self.gpu = gpu
+        self.SQL_TOK = SQL_TOK
+
+        if trainable:
+            print("Using trainable embedding")
+            print("did not write trainable")
+        else:
+            '''
+            word_emb directly from glove, eg.
+            the 1.43 1.33...(dim)
+            down -0.83 1.54...(dim)
+            ...
+            '''
+            print("Using fixed embedding")
+            self.word_emb = word_emb
+            
+    def gen_x_batch(self, questions, cols):
+        '''
+        generate word embeddings by batch size defined in train.py
+        input: 
+            questions: n (btach size) question arrays
+                [[q1],[q2],..n]
+            cols: column name of n (btach size) tables  arrays
+                [[[t1col1],[t1col2]],[[t2col1],[t2col2]],..n]
+        '''
+        B = len(q)
+        val_embs = []
+        # val_lens: length of the question
+        val_lens = np.zeros(B, dtype=np.int64)
+        # one_q: 1D tokenized question array
+        # one_col: 2D tokenized col name array
+        for i, (one_q, one_col) in enumerate(zip(questions, cols)):
+            # get word embeddings of every single token of one_question and save together; if null, fill it with zeros
+            q_value = map(lambda x:self.word_emb.get(x, np.zeros(self.N_word, dtype=np.float32)), one_q)
+
+            # add <BEG>and<END>
+            val_embs.append([np.zeros(self.N_word, dtype=np.float32)] + q_value + [np.zeros(self.N_word, dtype=np.float32)])
+            # update val_lens correspondingly
+            val_lens[i] = len(q_value) + 2
+
+        # longest question in current batch
+        max_len = max(val_lens)
+
+        # then generate zeros array with size(num_of_q * max_len * word_dim)
+        val_emb_array = np.zeros((B, max_len, self.N_word), dtype=np.float32)
+        for i in range(B):
+            for j in range(len(val_embs[i])):
+                val_emb_array[i,j :] = val_embs[i, j]
+        
+        # to tensor
+        val_input = torch.from_numpy(val_emb_array)
+        if self.gpu:
+            val_input = val_input.cuda()
+        val_input_var = Variable(val_input)
+
+        return val_input_var, val_lens
+        
+
+        
+
+
+

@@ -1,2 +1,5 @@
 data/
-model-reimplementation/
+model-reimplementation/SQLNet
+model-reimplementation/.vscode
+model-reimplementation/re_SQLNet/data
+model-reimplementation/re_SQLNet/data_resplit
