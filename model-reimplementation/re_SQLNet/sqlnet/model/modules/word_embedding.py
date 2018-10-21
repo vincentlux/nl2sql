@@ -38,6 +38,10 @@ class WordEmbedding(nn.Module):
                 [[q1],[q2],..n]
             cols: column name of n (btach size) tables  arrays
                 [[[t1col1],[t1col2]],[[t2col1],[t2col2]],..n]
+                no use if only SQLNet
+        output: 
+            val_input_var: torch word_emb array with size(num_of_q * max_len * word_dim)
+            val_lens: 1d array with length the batch size, saving the length of each question
         '''
         B = len(q)
         val_embs = []
@@ -61,7 +65,8 @@ class WordEmbedding(nn.Module):
         val_emb_array = np.zeros((B, max_len, self.N_word), dtype=np.float32)
         for i in range(B):
             for j in range(len(val_embs[i])):
-                val_emb_array[i,j :] = val_embs[i, j]
+                # : might be removed
+                val_emb_array[i, j, :] = val_embs[i, j]
         
         # to tensor
         val_input = torch.from_numpy(val_emb_array)
@@ -72,7 +77,50 @@ class WordEmbedding(nn.Module):
         return val_input_var, val_lens
         
 
+    def get_col_batch(self, cols):
+        '''
+        similar as gen_x_batch
+        input:
+            cols: array of table columns with size the number of batch size
+        '''
+        col_len = np.zeros(len(cols), dtype=np.int64)
+
+        names = []
+        # append column names of x tables 
+        for i, one_cols in enumerate(cols):
+            names = names + one_cols
+            col_len[i] = len(one_cols)
         
 
+        # names is[[tb1_col1],[tb1_col2],...], all column names in this batch 
+        print("names:"+ str(names))
+        # col_len is [5,7,...] size batch size; each col number of words for each table
+        print("lens:") + str(col_len)
+
+        name_input_var, name_len = self.str_list_to_batch(names)
+        return name_input_var, name_len, col_len
+
+    def str_list_to_batch(self, str_list):
+        # B: number of cols of all tables in this batch
+        B = len(str_list)
+        val_embs = []
+        val_len = np.zeros(B, dtype=np.int64)
+        for i, one_str in enumerate(str_list):
+            # get word_emb for each cols; if does not exist, fill with 0
+            val = [self.word_emb.get(x, np.zeros(self.N_word, dtype=np.float32)) for x in one_str]
+            val_embs.append(val)
+            val_len[i] = len(val)
+        max_len = max(val_len)
+
+        val_embs_array = np.zeros((B, max_len, self.N_word), dtype=np.float32)
+        for i in range(B):
+            for j in range(len(val_embs[i])):
+                val_embs_array[i, j, :] = val_embs[i][j]
+        val_input = torch.from_numpy(val_embs_array)
+        if self.gpu:
+            val_input = val_input.cuda()
+        val_input_var = Variable(val_input)
+
+        return val_input_var, val_len   
 
 
