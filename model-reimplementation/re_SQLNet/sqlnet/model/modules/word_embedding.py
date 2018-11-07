@@ -43,7 +43,7 @@ class WordEmbedding(nn.Module):
             val_input_var: torch word_emb array with size(num_of_q * max_len * word_dim)
             val_lens: 1d array with length the batch size, saving the length of each question
         '''
-        B = len(q)
+        B = len(questions)
         val_embs = []
         # val_lens: length of the question
         val_lens = np.zeros(B, dtype=np.int64)
@@ -51,8 +51,14 @@ class WordEmbedding(nn.Module):
         # one_col: 2D tokenized col name array
         for i, (one_q, one_col) in enumerate(zip(questions, cols)):
             # get word embeddings of every single token of one_question and save together; if null, fill it with zeros
-            q_value = map(lambda x:self.word_emb.get(x, np.zeros(self.N_word, dtype=np.float32)), one_q)
-
+            # print("one_q", one_q)
+            # print(self.word_emb.get('yes'))
+            # print(self.word_emb.get(one_q[0], np.zeros(self.N_word, dtype=np.float32)))
+            q_value = list(map(lambda x:self.word_emb.get(x, np.zeros(self.N_word, dtype=np.float32)), one_q))
+            # for i in range(len(q_value)):
+            # for a in range(len(q_value)):
+            #     print("q_value[a]",np.array(list(q_value[a]), dtype='float32'))
+            #     print("list_q_value[a]", list(q_value[a]))
             # add <BEG>and<END>
             val_embs.append([np.zeros(self.N_word, dtype=np.float32)] + q_value + [np.zeros(self.N_word, dtype=np.float32)])
             # update val_lens correspondingly
@@ -63,11 +69,15 @@ class WordEmbedding(nn.Module):
 
         # then generate zeros array with size(num_of_q * max_len * word_dim)
         val_emb_array = np.zeros((B, max_len, self.N_word), dtype=np.float32)
+        # print("val_embs",val_embs)
+        # print(val_emb_array)
         for i in range(B):
             for j in range(len(val_embs[i])):
                 # : might be removed
-                val_emb_array[i, j, :] = val_embs[i, j]
-        
+                # val_emb_array[i, j, :] = val_embs[i, j]
+                # print(val_emb_array[i,j])
+                val_emb_array[i, j] = val_embs[i][j]
+
         # to tensor
         val_input = torch.from_numpy(val_emb_array)
         if self.gpu:
@@ -77,7 +87,7 @@ class WordEmbedding(nn.Module):
         return val_input_var, val_lens
         
 
-    def get_col_batch(self, cols):
+    def gen_col_batch(self, cols):
         '''
         similar as gen_x_batch
         input:
@@ -93,9 +103,9 @@ class WordEmbedding(nn.Module):
         
 
         # names is[[tb1_col1],[tb1_col2],...], all column names in this batch 
-        print("names:"+ str(names))
+        # print("names:"+ str(names))
         # col_len is [5,7,...] size batch size; each col number of words for each table
-        print("lens:") + str(col_len)
+        # print("lens:" + str(col_len))
 
         name_input_var, name_len = self.str_list_to_batch(names)
         return name_input_var, name_len, col_len

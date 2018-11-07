@@ -1,5 +1,9 @@
+.vscode/
+__pycache__/
 data/
+
 model-reimplementation/SQLNet
-model-reimplementation/.vscode
 model-reimplementation/re_SQLNet/data
 model-reimplementation/re_SQLNet/data_resplit
+model-reimplementation/re_SQLNet/glove
+model-reimplementation/re_SQLNet/saved_model

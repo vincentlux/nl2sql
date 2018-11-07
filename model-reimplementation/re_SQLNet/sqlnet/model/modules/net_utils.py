@@ -18,8 +18,8 @@ def run_lstm(lstm, input, input_len, hidden=None):
     if input.is_cuda:
         sort_perm = torch.LongTensor(sort_perm).cuda()
         sort_perm_inv = torch.LongTensor(sort_perm_inv).cuda()
-    lstm_input = nn.utils.rnn.pack_padded_sequence(input=input[sort_perm],
-     lengths=sort_input_len, batch_first=True)
+    lstm_input = nn.utils.rnn.pack_padded_sequence(input[sort_perm],
+     sort_input_len, batch_first=True)
 
     # ???
     if hidden is None:
@@ -40,6 +40,21 @@ def run_lstm(lstm, input, input_len, hidden=None):
     # https://pytorch.org/docs/stable/nn.html?highlight=pack#torch.nn.utils.rnn.pack_padded_sequence
     # https://stackoverflow.com/questions/51030782/why-do-we-pack-the-sequences-in-pytorch
 
-    def col_name_encode(name_input_var, name_len, col_len, enc_lstm):
-        # read papers
-        return 0
+def col_name_encode(name_input_var, name_len, col_len, enc_lstm):
+    # read papers
+    # column attention
+    # encode the columns
+    # the embedding of a column name is the last state of its lstm output
+    name_hidden, _ = run_lstm(enc_lstm, name_input_var, name_len)
+    name_out = name_hidden[tuple(range(len(name_len))), name_len-1]
+    ret = torch.FloatTensor(
+            len(col_len), max(col_len), name_out.size()[1]).zero_()
+    if name_out.is_cuda:
+        ret = ret.cuda()
+
+    st = 0
+    for idx, cur_len in enumerate(col_len):
+        ret[idx, :cur_len] = name_out.data[st:st+cur_len]
+        st += cur_len
+    ret_var = Variable(ret)
+    return ret_var, col_len
