@@ -60,6 +60,8 @@ class SQLNet(nn.Module):
         
 
     def generate_gt_where_seq(self, q, col, query):
+        # input by batch
+        # output sub-where sequence index (where part after op) by compare SQL-where with nl input
         ret_seq = []
         for cur_q, cur_col, cur_query in zip(q, col, query):
             cur_values = []
@@ -67,6 +69,9 @@ class SQLNet(nn.Module):
                     'WHERE' in cur_query else len(cur_query)
 
             all_toks = ['<BEG>'] + cur_q + ['<END>']
+            # print("all_toks: ", all_toks)
+            # print("cur_col: ", cur_col)
+            # print("cur_query: ", cur_query)
             while st < len(cur_query):
                 ed = len(cur_query) if 'AND' not in cur_query[st:]\
                         else cur_query[st:].index('AND') + st
@@ -79,8 +84,10 @@ class SQLNet(nn.Module):
                 else:
                     raise RuntimeError("No operator in it!")
                 this_str = ['<BEG>'] + cur_query[op+1:ed] + ['<END>']
+                # print("this_str: ", this_str)
                 cur_seq = [all_toks.index(s) if s in all_toks \
                         else 0 for s in this_str]
+                # print("cur_seq: ", cur_seq)
                 cur_values.append(cur_seq)
                 st = ed+1
             ret_seq.append(cur_values)
@@ -88,6 +95,7 @@ class SQLNet(nn.Module):
 
     def forward(self, q, col, col_num, pred_entry,
             gt_where = None, gt_cond=None, reinforce=False, gt_sel=None):
+        # aggregate agg, sel, and cond forward
         B = len(q)
         pred_agg, pred_sel, pred_cond = pred_entry
 

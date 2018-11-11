@@ -19,7 +19,7 @@ class WordEmbedding(nn.Module):
 
         if trainable:
             print("Using trainable embedding")
-            print("did not write trainable")
+            print("Did not implement trainable")
         else:
             '''
             word_emb directly from glove, eg.

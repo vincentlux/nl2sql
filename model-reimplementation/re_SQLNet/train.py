@@ -32,6 +32,7 @@ if __name__ == '__main__':
     B_word=6
     if args.toy:
         USE_SMALL=True
+        # USE_SMALL=False
         #GPU=True
         GPU=False
         BATCH_SIZE=15
@@ -114,6 +115,7 @@ if __name__ == '__main__':
         print('Init dev acc_qm: %s\n  breakdown on (agg, sel, where): %s'%\
                 init_acc)
         if TRAIN_AGG:
+            # model.agg_pred defined in sqlnet.py line 43
             torch.save(model.agg_pred.state_dict(), agg_m)
             if args.train_emb:
                 torch.save(model.agg_embed_layer.state_dict(), agg_e)
@@ -127,6 +129,7 @@ if __name__ == '__main__':
                 torch.save(model.cond_embed_layer.state_dict(), cond_e)
         for i in range(100):
             print('Epoch %d @ %s'%(i+1, datetime.datetime.now()))
+            # model from sqlnet.py
             print(' Loss = %s'%epoch_train(
                     model, optimizer, BATCH_SIZE, 
                     sql_data, table_data, TRAIN_ENTRY))

@@ -93,6 +93,11 @@ def best_model_name(args, for_load=False):
 
 
 def to_batch_seq(sql_data, table_data, idxes, st, ed, ret_vis_data=False):
+    '''
+        input:
+                sql_data: original dataset with all informations
+                idxes: permutated list arrary with len(sql_data)
+    '''
     q_seq = []
     col_seq = []
     col_num = []
@@ -101,6 +106,21 @@ def to_batch_seq(sql_data, table_data, idxes, st, ed, ret_vis_data=False):
     gt_cond_seq = []
     vis_seq = []
     for i in range(st, ed):
+
+        '''
+        idxes changes each epoch because of permutation
+        sql['question_tok']: eg. ['what', 'position', 'does', 'the', 'player', 'who', 'played', 'for', 'butler', 'cc', '(', 'ks', ')', 'play', '?']
+        table_data[sql['table_id']]['header_tok']: get the header token of corresponding nl input (connected by table id)
+        sql['query_tok']: eg. ['SELECT', 'position', 'WHERE', 'school/club', 'team', 'EQL', 'butler', 'cc', '(', 'ks', ')'], 
+        output:
+                q_seq: batch size, tokenized nl input
+                col_seq: batch size, tokenized corresponding table header 
+                col_num,
+                ans_seq,
+                query_seq,
+                gt_cond_seq
+        '''
+        
         sql = sql_data[idxes[i]]
         q_seq.append(sql['question_tok'])
         col_seq.append(table_data[sql['table_id']]['header_tok'])
@@ -117,7 +137,6 @@ def to_batch_seq(sql_data, table_data, idxes, st, ed, ret_vis_data=False):
     if ret_vis_data:
         return q_seq, col_seq, col_num, ans_seq, query_seq, gt_cond_seq, vis_seq
     else:
-        # print "col_seq: ", str(col_seq)
         return q_seq, col_seq, col_num, ans_seq, query_seq, gt_cond_seq
 
 def to_batch_query(sql_data, idxes, st, ed):
@@ -129,28 +148,26 @@ def to_batch_query(sql_data, idxes, st, ed):
     return query_gt, table_ids
 
 def epoch_train(model, optimizer, batch_size, sql_data, table_data, pred_entry):
+    # model from sqlnet.py
     model.train()
+    # 1000/epoch if use_small
+    # 36500~ if not use_small
+    print(len(sql_data))
     perm=np.random.permutation(len(sql_data))
     cum_loss = 0.0
     st = 0
+    # split epoch by batch size
     while st < len(sql_data):
         ed = st+batch_size if st+batch_size < len(perm) else len(perm)
 
         q_seq, col_seq, col_num, ans_seq, query_seq, gt_cond_seq = \
                 to_batch_seq(sql_data, table_data, perm, st, ed)
         gt_where_seq = model.generate_gt_where_seq(q_seq, col_seq, query_seq)
-        # print "gt_where_seq: ", str(gt_where_seq)
         gt_sel_seq = [x[1] for x in ans_seq]
+
         score = model.forward(q_seq, col_seq, col_num, pred_entry,
                 gt_where=gt_where_seq, gt_cond=gt_cond_seq, gt_sel=gt_sel_seq)
         loss = model.loss(score, ans_seq, pred_entry, gt_where_seq)
-
-        # debug
-        # print "loss: " + loss
-        # print loss.data.cpu().numpy()
-        # print ed
-        # print st
-        # print loss.data.cpu().numpy()*(ed - st)
 
         cum_loss += loss.data.cpu().numpy()*(ed - st)
         optimizer.zero_grad()
@@ -162,7 +179,7 @@ def epoch_train(model, optimizer, batch_size, sql_data, table_data, pred_entry):
     return cum_loss / len(sql_data)
 
 def epoch_exec_acc(model, batch_size, sql_data, table_data, db_path):
-    engine = DBEngine(db_path)
+    engine = dbengine.DBEngine(db_path)
 
     model.eval()
     perm = list(range(len(sql_data)))
