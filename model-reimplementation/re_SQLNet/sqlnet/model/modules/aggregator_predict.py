@@ -38,6 +38,7 @@ class AggPredictor(nn.Module):
         if self.use_ca:
             e_col, _ = col_name_encode(col_inp_var, col_name_len, 
                     col_len, self.agg_col_name_enc)
+            print("e_col", e_col)
             chosen_sel_idx = torch.LongTensor(gt_sel)
             aux_range = torch.LongTensor(range(len(gt_sel)))
             if x_emb_var.is_cuda:
