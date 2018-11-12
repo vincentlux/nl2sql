@@ -148,7 +148,10 @@ def to_batch_query(sql_data, idxes, st, ed):
     return query_gt, table_ids
 
 def epoch_train(model, optimizer, batch_size, sql_data, table_data, pred_entry):
-    # model from sqlnet.py
+    '''
+        use model from sqlnet.py
+        pred_entry: (True, True, True)  # (AGG, SEL, COND)
+    '''
     model.train()
     # 1000/epoch if use_small
     # 36500~ if not use_small
