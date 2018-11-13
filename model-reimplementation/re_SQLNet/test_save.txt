@@ -1,0 +1,18 @@
+Epoch 1 @ 2018-11-13 14:29:46.215261
+1000
+ Loss = 6.06499730348587
+ Train acc_qm: 0.009
+   breakdown result: [0.71  0.171 0.041]
+ Dev acc_qm: 0.003
+   breakdown result: [0.717 0.174 0.04 ]
+ Best val acc = (0.717, 0.174, 0.04), on epoch (1, 1, 1) individually
+Epoch 2 @ 2018-11-13 14:31:13.063497
+1000
+ Loss = 4.888631818294525
+ Train acc_qm: 0.015
+   breakdown result: [0.759 0.179 0.081]
+ Dev acc_qm: 0.01
+   breakdown result: [0.745 0.157 0.083]
+ Best val acc = (0.745, 0.174, 0.083), on epoch (2, 1, 2) individually
+Epoch 3 @ 2018-11-13 14:32:39.521899
+1000

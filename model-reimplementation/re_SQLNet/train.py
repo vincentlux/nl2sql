@@ -1,3 +1,4 @@
+import sys
 import json
 import torch
 from sqlnet.utils import *
@@ -128,6 +129,8 @@ if __name__ == '__main__':
             if args.train_emb:
                 torch.save(model.cond_embed_layer.state_dict(), cond_e)
         for i in range(100):
+            # test saving result to file
+            sys.stdout = open("test_save.txt", "a")
             print('Epoch %d @ %s'%(i+1, datetime.datetime.now()))
             # model from sqlnet.py
             print(' Loss = %s'%epoch_train(
@@ -175,3 +178,4 @@ if __name__ == '__main__':
             print(' Best val acc = %s, on epoch %s individually'%(
                     (best_agg_acc, best_sel_acc, best_cond_acc),
                     (best_agg_idx, best_sel_idx, best_cond_idx)))
+            sys.stdout.close()
