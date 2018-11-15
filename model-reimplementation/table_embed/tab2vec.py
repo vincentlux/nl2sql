@@ -30,8 +30,11 @@ def load_data(sql_paths, table_paths, use_small=False):
         with open(TABLE_PATH) as inf:
             for line in inf:
                 tab = json.loads(line.strip())
-                table_data[tab[u'id']] = tab
-
+                table_data[tab['id']] = tab
+    # only get header_tok and header
+    for k, v in table_data.items():
+        v = {target:v[target] for target in ["header_tok", "rows"]}
+        table_data[k] = v
     for sql in sql_data:
         assert sql[u'table_id'] in table_data
 
@@ -46,5 +49,7 @@ def load_dataset(use_small=False):
 
     return sql_data, table_data
 
-a = load_dataset(True)
-print(a)
+sql_data, table_data = load_dataset(use_small=True)
+print(len(table_data))
+print(table_data['1-1000181-1'])
+# next thing to do: transpose rows to columns
