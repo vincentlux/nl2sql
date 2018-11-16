@@ -58,3 +58,4 @@ class AggPredictor(nn.Module):
         K_agg = (h_enc * att.unsqueeze(2).expand_as(h_enc)).sum(1)
         agg_score = self.agg_out(K_agg)
         return agg_score
+        
