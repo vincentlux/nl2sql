@@ -31,13 +31,19 @@ def load_data(sql_paths, table_paths, use_small=False):
             for line in inf:
                 tab = json.loads(line.strip())
                 table_data[tab['id']] = tab
-    # only get header_tok and header
+    # only get header_tok and rows (transposed)
     for k, v in table_data.items():
-        v = {target:v[target] for target in ["header_tok", "rows"]}
+        v = {target: v[target] for target in ["header_tok", "rows"]}
         table_data[k] = v
+        for k2, v2 in v.items():
+            # transpose
+            if k2 == "rows":
+                v[k2] = [list(x) for x in zip(*v2)]
+                table_data[k] = v
+        v["columns"] = v.pop("rows")
+            
     for sql in sql_data:
-        assert sql[u'table_id'] in table_data
-
+        assert sql['table_id'] in table_data
     return sql_data, table_data
 
 def load_dataset(use_small=False):
@@ -49,7 +55,21 @@ def load_dataset(use_small=False):
 
     return sql_data, table_data
 
+
+def intersect(table_data):
+    '''
+    input: 
+    table_dictionary: nested dict, {id:{'header_tok':array1,'columns'}}
+    output: 2d array saving each header-col pair at same dim
+    '''
+    full_list = []
+    for k, v in table_data.items():
+        for k2, v2 in v.items():
+            
+
+
+    return
+
 sql_data, table_data = load_dataset(use_small=True)
 print(len(table_data))
 print(table_data['1-1000181-1'])
-# next thing to do: transpose rows to columns
