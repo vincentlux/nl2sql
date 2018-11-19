@@ -33,7 +33,7 @@ def load_data(sql_paths, table_paths, use_small=False):
                 table_data[tab['id']] = tab
     # only get header_tok and rows (transposed)
     for k, v in table_data.items():
-        v = {target: v[target] for target in ["header_tok", "rows"]}
+        v = {target: v[target] for target in ["header", "rows"]}
         table_data[k] = v
         for k2, v2 in v.items():
             # transpose
@@ -50,9 +50,6 @@ def load_dataset(use_small=False):
     print("Loading from original dataset")
     sql_data, table_data = load_data('data/train_tok.jsonl',
             'data/train_tok.tables.jsonl', use_small=use_small)
-    # val_sql_data, val_table_data = load_data('data/dev_tok.jsonl',
-    #         'data/dev_tok.tables.jsonl', use_small=use_small)
-
     return sql_data, table_data
 
 
@@ -62,14 +59,30 @@ def intersect(table_data):
     table_dictionary: nested dict, {id:{'header_tok':array1,'columns'}}
     output: 2d array saving each header-col pair at same dim
     '''
-    full_list = []
+    header_list = []
+    column_list = []
+    intersect_list = []
+    # Save into two lists
     for k, v in table_data.items():
         for k2, v2 in v.items():
-            
-
-
-    return
+            if k2 == "header":
+                header_list.append(v2)
+            else:
+                column_list.append(v2)
+    # Loop over and merge(intersect) headers and columns 
+    for tab in range(len(column_list)):
+        for col in range(len(column_list[tab])):
+            dup_list = [header_list[tab][col]] * len(column_list[tab][col])
+            intersect = [(dup_list[i], column_list[tab][col][i]) for i in range(0, len(dup_list))]
+            # flatten tuple
+            intersect = [item for sublist in intersect for item in sublist]
+            intersect_list.append(intersect)
+    return header_list, column_list, intersect_list
 
 sql_data, table_data = load_dataset(use_small=True)
-print(len(table_data))
-print(table_data['1-1000181-1'])
+# print(len(table_data))
+# print(table_data['1-1000181-1'])
+header_list, column_list, intersect_list = intersect(table_data)
+
+print(len(intersect_list))
+print(intersect_list[0:10])
