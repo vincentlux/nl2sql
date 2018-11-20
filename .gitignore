@@ -1,6 +1,7 @@
 .vscode/
 __pycache__/
 data/
+embeddings/
 
 model-reimplementation/SQLNet
 model-reimplementation/re_SQLNet/data

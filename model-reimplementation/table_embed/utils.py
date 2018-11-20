@@ -84,7 +84,7 @@ def intersect(table_data):
             intersect_list[line][element] = re.sub("[^a-zA-Z]"," ", str(intersect_list[line][element])).lower().split()
 
         intersect_list[line] = [item for sublist in intersect_list[line] for item in sublist]
-        if line % 1000 == 0:
+        if line % 10000 == 0:
             print(line)
         
     return intersect_list

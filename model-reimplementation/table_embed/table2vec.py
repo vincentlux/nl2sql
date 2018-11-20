@@ -1,3 +1,4 @@
+import os
 import utils
 import logging
 from gensim.models import Word2Vec
@@ -20,8 +21,10 @@ def tab_to_vec():
     model = Word2Vec(sentences, workers=num_workers, \
                 size=num_features, min_count = min_word_count, \
                 window = context, sample = downsampling)
-    model_name = "300features_5minwords_5context"
-    model.save(model_name)
+    if not os.path.exists("./embeddings"):
+        os.makedirs("./embeddings")
+    model_name = "./embeddings/300features_5minwords_5context.txt"
+    model.wv.save_word2vec_format(model_name, binary=False)
     # next to do: save model as vectors.txt
 
 
