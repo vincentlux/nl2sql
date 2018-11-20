@@ -5,6 +5,7 @@ header_tok
 rows (need to be tokenized)
 '''
 import json
+import re
 
 def load_data(sql_paths, table_paths, use_small=False):
     if not isinstance(sql_paths, list):
@@ -77,12 +78,21 @@ def intersect(table_data):
             # flatten tuple
             intersect = [item for sublist in intersect for item in sublist]
             intersect_list.append(intersect)
-    return header_list, column_list, intersect_list
+    # lowercase, remove punc, tokenize
+    for line in range(len(intersect_list)):
+        for element in range(len(intersect_list[line])):
+            intersect_list[line][element] = re.sub("[^a-zA-Z]"," ", str(intersect_list[line][element])).lower().split()
+
+        intersect_list[line] = [item for sublist in intersect_list[line] for item in sublist]
+        if line % 1000 == 0:
+            print(line)
+        
+    return intersect_list
 
 sql_data, table_data = load_dataset(use_small=True)
-# print(len(table_data))
-# print(table_data['1-1000181-1'])
-header_list, column_list, intersect_list = intersect(table_data)
+
+intersect_list = intersect(table_data)
 
 print(len(intersect_list))
 print(intersect_list[0:10])
+# next to do: tokenize each object and feed into word2vec
