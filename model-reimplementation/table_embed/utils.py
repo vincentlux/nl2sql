@@ -89,10 +89,9 @@ def intersect(table_data):
         
     return intersect_list
 
-sql_data, table_data = load_dataset(use_small=True)
 
-intersect_list = intersect(table_data)
-
-print(len(intersect_list))
-print(intersect_list[0:10])
+# sql_data, table_data = load_dataset(use_small=True)
+# intersect_list = intersect(table_data)
+# print(len(intersect_list))
+# print(intersect_list[0:10])
 # next to do: tokenize each object and feed into word2vec
