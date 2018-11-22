@@ -21,8 +21,10 @@ sql_data, table_data, val_sql_data, val_table_data,\
         load_dataset(0, use_small=USE_SMALL)
 
 # Need to rewrite this part to avoid hard coding
-word_emb = load_word_emb('glove/glove.%dB.%dd.txt'%(B_word,N_word),
-        use_small=USE_SMALL)
+# word_emb = load_word_emb('glove/glove.%dB.%dd.txt'%(B_word,N_word),
+#         use_small=USE_SMALL)
+word_emb = load_word_emb('glove/embeddings/300features_5minwords_5context.txt',
+          use_small=USE_SMALL)
 
 
 print("Length of word vocabulary: %d"%len(word_emb))

@@ -4,7 +4,9 @@ import logging
 from gensim.models import Word2Vec
 
 def tab_to_vec():
-
+    '''
+    Train table embeddings and save under ./embeddings folder
+    '''
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s',\
     level=logging.INFO)
     # Set values for various parameters
@@ -25,7 +27,6 @@ def tab_to_vec():
         os.makedirs("./embeddings")
     model_name = "./embeddings/300features_5minwords_5context.txt"
     model.wv.save_word2vec_format(model_name, binary=False)
-    # next to do: save model as vectors.txt
 
 
 tab_to_vec()

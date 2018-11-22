@@ -27,10 +27,10 @@ if __name__ == '__main__':
             help='Train word embedding for SQLNet(requires pretrained model).')
     args = parser.parse_args()
 
-#     N_word=300
-#     B_word=42
-    N_word=100
-    B_word=6
+    N_word=300
+    B_word=42
+#     N_word=100
+#     B_word=6
     if args.toy:
         USE_SMALL=True
         # USE_SMALL=False
@@ -50,10 +50,10 @@ if __name__ == '__main__':
             TRAIN_DB, DEV_DB, TEST_DB = load_dataset(
                     args.dataset, use_small=USE_SMALL)
 
-    word_emb = load_word_emb('glove/glove.%dB.%dd.txt'%(B_word,N_word), \
-            load_used=args.train_emb, use_small=USE_SMALL)
-#     word_emb = load_word_emb('glove/embeddings/300features_5minwords_5context.txt',
-#               load_used=args.train_emb, use_small=USE_SMALL)
+#     word_emb = load_word_emb('glove/glove.%dB.%dd.txt'%(B_word,N_word), \
+#             load_used=args.train_emb, use_small=USE_SMALL)
+    word_emb = load_word_emb('glove/embeddings/300features_5minwords_5context.txt',
+              load_used=args.train_emb, use_small=USE_SMALL)
 
 
     if args.baseline:
