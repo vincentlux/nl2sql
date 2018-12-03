@@ -51,7 +51,15 @@ def load_dataset(use_small=False):
     print("Loading from original dataset")
     sql_data, table_data = load_data('data/train_tok.jsonl',
             'data/train_tok.tables.jsonl', use_small=use_small)
-    return sql_data, table_data
+    sql_data_dev, table_data_dev = load_data('data/dev_tok.jsonl',
+            'data/dev_tok.tables.jsonl', use_small=use_small)
+    sql_data_test, table_data_test = load_data('data/test_tok.jsonl',
+            'data/test_tok.tables.jsonl', use_small=use_small)
+
+    # Use train,dev,test tables for word2vec training
+    table_data_all = {**table_data, **table_data_dev, **table_data_test}
+    print(len(table_data_all))
+    return table_data_all
 
 
 def intersect(table_data):
@@ -85,13 +93,14 @@ def intersect(table_data):
 
         intersect_list[line] = [item for sublist in intersect_list[line] for item in sublist]
         if line % 10000 == 0:
-            print(line)
+            print("processed "+str(line)+" of "+ str(len(intersect_list))+" lines")
         
     return intersect_list
 
 
-# sql_data, table_data = load_dataset(use_small=True)
+# table_data = load_dataset(use_small=True)
+
 # intersect_list = intersect(table_data)
 # print(len(intersect_list))
-# print(intersect_list[0:10])
+# print(intersect_list[:10])
 # next to do: tokenize each object and feed into word2vec
