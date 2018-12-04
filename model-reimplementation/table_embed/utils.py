@@ -65,7 +65,7 @@ def load_dataset(use_small=False):
 def intersect(table_data):
     '''
     input: 
-    table_dictionary: nested dict, {id:{'header_tok':array1,'columns'}}
+    table_data: nested dict, {id:{'header_tok':array1,'columns'}}
     output: 2d array saving each header-col pair at same dim
     '''
     header_list = []

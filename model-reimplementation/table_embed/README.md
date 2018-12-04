@@ -1,6 +1,7 @@
 # Run
 
 `python table2vec.py`
+`python table2vec.py --suffix str`: save trained embeddings with input suffix
 
 # Experiment
 * To generate table embeddings and test performance \

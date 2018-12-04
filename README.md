@@ -4,3 +4,4 @@
 * think of a way to generate row embeddings (first find the most representative row?)
 * consider training on embeddings
 
+
