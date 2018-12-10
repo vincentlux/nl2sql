@@ -23,8 +23,8 @@
 - [ ] 1204: Supervised Learning of Universal Sentence Representations from Natural Language Inference Data
 - [ ] 1204: Retrofitting Word Vectors to Semantic Lexicons
 - [ ] ConceptNet 5.5: An Open Multilingual Graph of General Knowledge
-
-
+- [x] 1210: Structural Embedding of Syntactic Trees for Machine Comprehension
+ 
 
 ## Useful links
 [Embedding resources](https://github.com/Hironsan/awesome-embedding-models)
