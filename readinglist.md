@@ -28,3 +28,4 @@
 
 ## Useful links
 [Embedding resources](https://github.com/Hironsan/awesome-embedding-models)
+[Discussion on different embeddings](https://medium.com/huggingface/universal-word-sentence-embeddings-ce48ddc8fc3a)
