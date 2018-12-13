@@ -25,6 +25,8 @@
 - [ ] ConceptNet 5.5: An Open Multilingual Graph of General Knowledge
 - [x] 1210: Structural Embedding of Syntactic Trees for Machine Comprehension
  
+## web-table embeddings
+- [ ] __ColNet: Embedding the Semantics of Web Tables for Column Type Prediction__
 
 ## Useful links
 [Embedding resources](https://github.com/Hironsan/awesome-embedding-models)
