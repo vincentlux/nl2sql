@@ -25,10 +25,11 @@
 - [ ] ConceptNet 5.5: An Open Multilingual Graph of General Knowledge
 - [x] 1210: Structural Embedding of Syntactic Trees for Machine Comprehension
  
-## Relation embeddings
+## Papers to read
 - [ ] __Training Relation Embeddings under Logical Constraints__
 
-## web-table embeddings
+- [ ] __A La Carte Embedding: Cheap but Effective Induction of Semantic Feature Vectors__
+
 - [ ] __ColNet: Embedding the Semantics of Web Tables for Column Type Prediction__
 
 ## Useful links
