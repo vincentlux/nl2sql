@@ -24,6 +24,9 @@
         combine predictive embedding models with count based models
 
 - [x] __ColNet: Embedding the Semantics of Web Tables for Column Type Prediction__
+
+        CNN and transfer learning to deal with rare words
+        
 - [x] Sentence Modeling via Multiple Word Embeddings and Multi-level Comparison for Semantic Textual Similarity
 - [x] Structural Embedding of Syntactic Trees for Machine Comprehension
 - [ ] Supervised Learning of Universal Sentence Representations from Natural Language Inference Data
