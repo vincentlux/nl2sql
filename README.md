@@ -25,7 +25,7 @@
 
 - [x] __ColNet: Embedding the Semantics of Web Tables for Column Type Prediction__
 
-        CNN and transfer learning to deal with rare words
+        CNN and transfer learning to deal with words did not appear at training corpus
 
 - [x] Sentence Modeling via Multiple Word Embeddings and Multi-level Comparison for Semantic Textual Similarity
 - [x] Structural Embedding of Syntactic Trees for Machine Comprehension
@@ -34,9 +34,13 @@
 - [ ] ConceptNet 5.5: An Open Multilingual Graph of General Knowledge
  
 ## Papers to read
+- [x] __Deep contextualized word representations(ELMo)__
+
 - [ ] __Training Relation Embeddings under Logical Constraints__
 
 - [ ] __A La Carte Embedding: Cheap but Effective Induction of Semantic Feature Vectors__
+
+
 
 
 
