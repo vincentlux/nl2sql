@@ -1,4 +1,4 @@
-data/
-data_resplit/
-glove/
+**/data
+**/data_resplit
+**/glove
 saved_model/
