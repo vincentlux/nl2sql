@@ -1,2 +1,5 @@
 data/
 model-reimplementation/
+data_resplit/
+glove/
+saved_model/
