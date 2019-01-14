@@ -19,5 +19,7 @@
 
 # Pytorch
 [gpu](https://morvanzhou.github.io/tutorials/machine-learning/torch/5-02-GPU/)
+
 [batch normalization](https://morvanzhou.github.io/tutorials/machine-learning/torch/5-04-batch-normalization/)
+
 [Deep Q Network](https://morvanzhou.github.io/tutorials/machine-learning/torch/4-05-A-DQN/)

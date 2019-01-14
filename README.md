@@ -25,7 +25,7 @@
 
 - [x] __ColNet: Embedding the Semantics of Web Tables for Column Type Prediction__
 
-        CNN and transfer learning to deal with words did not appear at training corpus
+        CNN and transfer learning to deal with words did not appear at KB
 
 - [x] Sentence Modeling via Multiple Word Embeddings and Multi-level Comparison for Semantic Textual Similarity
 - [x] Structural Embedding of Syntactic Trees for Machine Comprehension
