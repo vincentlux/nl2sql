@@ -1,3 +1,4 @@
+Branch for testing ensemble embeddings (KB + sgns)
 # A growing reading list for natural-language-to-SQL research
 
 ## Original paper 
