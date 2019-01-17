@@ -52,3 +52,5 @@ Branch for testing ensemble embeddings (KB + sgns)
 
 __[BERT explained](http://jalammar.github.io/illustrated-bert/)__
 
+Next to do: 
+fix k8s container not found bug
