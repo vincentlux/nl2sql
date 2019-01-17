@@ -1,4 +1,5 @@
-My CONFIG.yaml for kubernetes 
+My CONFIG.yaml for kubernetes.
+
 Thanks to https://github.com/HanGuo97/tf-library/blob/0.10/TFLibrary/docs/kubernetes_and_docker_guide.md
 
 
