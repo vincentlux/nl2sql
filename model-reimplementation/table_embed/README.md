@@ -1,3 +1,6 @@
+Idea:
+fine-tuned bert/elmo + conceptNet ?
+
 # Run
 
 `python table2vec.py`
