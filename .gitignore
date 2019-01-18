@@ -6,6 +6,6 @@ glove/
 saved_model/
 embeddings/
 
-model-reimplementation/SQLNet
+model/SQLNet
 
 dailycheck.md
