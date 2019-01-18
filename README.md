@@ -1,4 +1,4 @@
-Branch for testing ensemble embeddings (KB + sgns)
+Generating embeddings through doing L2-normalization to sgns embeddings trained by all data (train,dev,test).
 # A growing reading list for natural-language-to-SQL research
 
 ## Original paper 
