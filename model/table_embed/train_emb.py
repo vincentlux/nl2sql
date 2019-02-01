@@ -30,7 +30,3 @@ if __name__ == "__main__":
     model_name = "./embeddings/"+str(args.feature)+"f_"+str(args.wordcount)+ \
                 "minw_"+str(args.window)+"cont_tdt_"+args.suffix+".txt"
     model.wv.save_word2vec_format(model_name, binary=False)
-
-    # remove first line of saved file
-    with open model_name as f:
-        pass
