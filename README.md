@@ -1,4 +1,6 @@
-Generating embeddings through doing L2-normalization to sgns embeddings trained by all data (train,dev,test).
+## Strucuted code for all embedding method generation
+
+
 # A growing reading list for natural-language-to-SQL research
 
 ## Original paper 

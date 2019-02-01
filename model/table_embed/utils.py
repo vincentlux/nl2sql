@@ -62,7 +62,7 @@ def load_dataset(use_small=False):
     return table_data_all
 
 
-def intersect(table_data):
+def intersect(table_data, args):
     '''
     input: 
     table_data: nested dict, {id:{'header_tok':array1,'columns'}}
@@ -75,7 +75,14 @@ def intersect(table_data):
     for k, v in table_data.items():
         for k2, v2 in v.items():
             if k2 == "header":
-                header_list.append(v2)
+                # if n_gram header => convert to  "header name" to "header_name"
+                if args.ngram:
+                    v2 = [re.sub('\s+', '_',  i) for i in v2]
+                    header_list.append(v2)
+                    # print(header_list)
+                else:
+                    # print("header?",v2)
+                    header_list.append(v2)
             else:
                 column_list.append(v2)
     # Loop over and merge(intersect) headers and columns 
