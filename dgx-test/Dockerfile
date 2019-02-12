@@ -50,6 +50,16 @@ RUN conda install -y -c pytorch \
     torchvision=0.2.1 \
  && conda clean -ya
 
+# sqlova dependency
+RUN conda install -y babel \
+    matplotlib \
+    defusedxml \
+    tqdm \
+    && conda clean -ya
+
+RUN conda config --add channels conda-forge
+RUN conda install records \
+    && conda clean -ya
 
 # Install Requests, a Python library for making HTTP requests
 # RUN conda install -y requests=2.19.1 \

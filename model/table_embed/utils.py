@@ -42,7 +42,7 @@ def load_data(sql_paths, table_paths, use_small=False):
                 v[k2] = [list(x) for x in zip(*v2)]
                 table_data[k] = v
         v["columns"] = v.pop("rows")
-            
+
     for sql in sql_data:
         assert sql['table_id'] in table_data
     return sql_data, table_data
@@ -64,7 +64,7 @@ def load_dataset(use_small=False):
 
 def intersect(table_data, args):
     '''
-    input: 
+    input:
     table_data: nested dict, {id:{'header_tok':array1,'columns'}}
     output: 2d array saving each header-col pair at same dim
     '''
@@ -77,7 +77,7 @@ def intersect(table_data, args):
             if k2 == "header":
                 # if n_gram header => convert to  "header name" to "header_name"
                 if args.ngram:
-                    v2 = [re.sub('\s+', '_',  i) for i in v2]
+                    v2 = [re.sub(r'\s+', '_',  i.strip()) for i in v2]
                     header_list.append(v2)
                     # print(header_list)
                 else:
@@ -85,7 +85,7 @@ def intersect(table_data, args):
                     header_list.append(v2)
             else:
                 column_list.append(v2)
-    # Loop over and merge(intersect) headers and columns 
+    # Loop over and merge(intersect) headers and columns
     for tab in range(len(column_list)):
         for col in range(len(column_list[tab])):
             dup_list = [header_list[tab][col]] * len(column_list[tab][col])
@@ -96,12 +96,13 @@ def intersect(table_data, args):
     # lowercase, remove punc, tokenize
     for line in range(len(intersect_list)):
         for element in range(len(intersect_list[line])):
-            intersect_list[line][element] = re.sub("[^a-zA-Z]"," ", str(intersect_list[line][element])).lower().split()
+            intersect_list[line][element] = re.sub(r"[^\w]"," ", str(intersect_list[line][element]).lstrip('_').rstrip('_')).lower().split()
 
         intersect_list[line] = [item for sublist in intersect_list[line] for item in sublist]
         if line % 10000 == 0:
             print("processed "+str(line)+" of "+ str(len(intersect_list))+" lines")
-        
+
+    # print(intersect_list)
     return intersect_list
 
 

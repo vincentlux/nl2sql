@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', type=str, help='dir for sanity check files')
     parser.add_argument('--word', type=str, help='words for sanity check')
-    parser.add_argument('--topn', type=int, help='topn most similar words')
+    parser.add_argument('--topn', type=int, default=10, help='topn most similar words')
     args = parser.parse_args()
 
     # Read in as tuple and later fetch by corrsponding index
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     # Get one vec based on word
     # try:
     target = [v for i, v in enumerate(tup) if v[0] == args.word][0][1]
-    print(target)
+    # print(target)
         # Convert to np
     target = np.array([float(item) for item in target.split(' ')])
 
