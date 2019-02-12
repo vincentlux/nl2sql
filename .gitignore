@@ -1,3 +1,5 @@
+model/SQLNet/
+
 .vscode/
 __pycache__/
 data/
@@ -5,8 +7,3 @@ data_resplit/
 glove/
 saved_model/
 embeddings/
-
-model/SQLNet
-
-
-dailycheck.md
