@@ -1,0 +1,5 @@
+babel==2.6.0
+numpy==1.15.3
+pyyaml==3.13
+records==0.5.2
+sqlalchemy==1.2.14
