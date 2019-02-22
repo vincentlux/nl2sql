@@ -7,3 +7,4 @@ data_resplit/
 glove/
 saved_model/
 embeddings/
+stanza/

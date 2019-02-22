@@ -1,38 +1,68 @@
 # First test with google api
-import re, os
+import re, os, copy
 import argparse
-from googletrans import Translator
+import ujson as json
+from time import sleep
+from google.cloud import translate
 
 
-def load_wiki(path_wiki, mode="train"):
+def load_wiki(path_wiki, fout, mode="train"):
     # Load training and dev set by setted mode
     path_sql = os.path.join(path_wiki, mode+".jsonl")
-
     sql = []
     table = {}
+    attempts = 0
     with open(path_sql) as f:
         for idx, line in enumerate(f):
-            if toy_model and idx >= toy_size:
-                break
-            s = json.loads(line.strip())
+            s = json.loads(line.strip().replace("\xc2\xa0", " ")) # deal with utf8 bytes
             sql.append(s)
-            """
-            {'table_id': '1-1000181-1', 'phase': 1, 'question': 'Tell me what the notes are for South Australia ', 
-            'question_tok': ['Tell', 'me', 'what', 'the', 'notes', 'are', 'for', 'South', 'Australia'], 
-            'sql': {'sel': 5, 'conds': [[3, 0, 'SOUTH AUSTRALIA']], 'agg': 0}, 
-            'query': {'sel': 5, 'conds': [[3, 0, 'SOUTH AUSTRALIA']], 'agg': 0}, 'wvi_corenlp': [[7, 8]]}
-            """
+            trans = copy.deepcopy(s)
 
+            while attempts < 10:
+                try:
+                    trans["question"] = back_trans(trans["question"])
+                    sql.append(trans)
+                    break
+                except:
+                    sleep(5)
+                    attempts += 1
+            print(idx)
+            if idx % 10 == 0:
+                with open(fout, 'at') as f:
+                    for line in sql:
+                        # print("line: ", str(line))
+                        # a = json.loads(str(line))
+                        f.write(json.dumps(line) + "\n")
+                        sql = []
+            """
+            {'phase': 1, 'table_id': '1-1570003-2', 'question': 'What was the playoff advancement during the year 1998?', 'sql': {'sel': 4, 'conds': [[0, 0, 1998]], 'agg': 0}}
+            """
+    return sql
 
+def back_trans(str_in):
+    tc = translate.Client()
+    fr = tc.translate(str_in, target_language="fr")
+    en = tc.translate(fr["translatedText"], target_language="en")
+    return en["translatedText"]
 
 
 if __name__ == "__main__":
     # preprocess
-    path = "../data/WikiSQL-1.1"
-    load_wiki(path_wiki, mode="train")
+    path_in = "../data/WikiSQL-1.1"
+    path_out = "../data/mt"
 
 
-    translator = Translator()
+    fout = os.path.join(path_out, 'train_mt') + '.jsonl'
+    sql = load_wiki(path_in, fout, mode="train")
+
+    # with open(fout, 'wt') as f:
+    #     for line in sql:
+    #         # print("line: ", str(line))
+    #         # a = json.loads(str(line))
+    #         f.write(json.dumps(line) + "\n")
+        
 
 
-    # print(translator.translate('veritas lux mea', src='la').text)
+
+
+    # print()

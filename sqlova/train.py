@@ -30,12 +30,6 @@ def get_models(args, bert_pt_path):
 
 
 
-
-
-
-
-
-
 if __name__ == "__main__":
     if torch.cuda.is_available():
         print("training using gpu")
@@ -46,6 +40,8 @@ if __name__ == "__main__":
     parser.add_argument('--no_pretraining', action='store_true', help='Use BERT pretrained model') # default value: false
     parser.add_argument("--accumulate_gradients", default=1, type=int,
                         help="The number of accumulation of backpropagation to effectivly increase the batch size.")
+    
+    
     args = parser.parse_args()
 
     ## 2. path
