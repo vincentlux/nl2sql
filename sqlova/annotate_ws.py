@@ -69,7 +69,6 @@ def annotate_example_ws(example, table):
         # print(wv_ann11)
         wv_ann1.append(wv_ann11)
 
-
     try:
         wvi1_corenlp = check_wv_tok_in_nlu_tok(wv_ann1, ann['question_tok'])
         ann['wvi_corenlp'] = wvi1_corenlp
@@ -86,14 +85,16 @@ if __name__ == "__main__":
     parser.add_argument('--din', default='./data/WikiSQL-1.1', help='data directory')
     parser.add_argument('--dout', default='./data/wikisql_tok', help='output directory')
     parser.add_argument('--aug_type', type=str, default='mt', help='mt or pos or reverse')
+    parser.add_argument('--out_name', type=str, default='default', help='notes for different file name')
+    parser.add_argument('--remove_err_tok', action='store_true', help="If present, remove tokens which do not have a match with sql table")
     args = parser.parse_args()
 
 
     for split in ['train','dev','test']:
         if split == 'train':
-            fsplit = os.path.join(args.din, split) + '_' + args.type + '.jsonl'
-            ftable = os.path.join(args.din, split) + '.tables.jsonl'
-            fout = os.path.join(args.dout, split) + '_' + args.type + '_tok.jsonl'
+            fsplit = os.path.join(args.din, split)+'_'+args.aug_type+'.jsonl'
+            ftable = os.path.join(args.din, split)+'.tables.jsonl'
+            fout = os.path.join(args.dout, split)+'_'+args.aug_type+'_'+args.out_name+ '_tok.jsonl'
         else:
             fsplit = os.path.join(args.din, split) + '.jsonl'
             ftable = os.path.join(args.din, split) + '.tables.jsonl'
@@ -115,7 +116,16 @@ if __name__ == "__main__":
                 count += 1
                 d = json.loads(line)
                 a = annotate_example_ws(d, tables[d['table_id']])
-                fo.write(json.dumps(a) + '\n')
-                n_written += 1
+
+                if split == 'train' and args.remove_err_tok:
+                    try:
+                        a["tok_error"]
+                        pass
+                    except:
+                        fo.write(json.dumps(a) + '\n')
+                        n_written += 1
+                else:
+                    fo.write(json.dumps(a) + '\n')
+                    n_written += 1
 
             print(f'wrote {n_written} examples')

@@ -19,6 +19,9 @@ def get_data(path_wiki, args):
     train_loader, dev_loader = get_loader_wiki(train_data, dev_data, args.bs, shuffle_train=True)
     return train_data, train_table, dev_data, dev_table, train_loader, dev_loader
 
+def get_bert():
+    
+
 def get_models(args, bert_pt_path):
     agg_ops = ['', 'MAX', 'MIN', 'COUNT', 'SUM', 'AVG']
     cond_ops = ['=', '>', '<', 'OP']
@@ -28,6 +31,9 @@ def get_models(args, bert_pt_path):
     print(f"learning rate: {args.lr_bert}")
     print(f"Fine-tune BERT: {args.fine_tune}")
 
+    # get bert
+    model_bert, tokenizer, bert_config = get_bert(bert_pt_path, args.bert_type,\
+                                                    args.do_lower_case, args.no_pretraining)
 
 
 if __name__ == "__main__":
@@ -56,5 +62,7 @@ if __name__ == "__main__":
     print("Finished loading data")
 
     # 4. Build and load models
+    model, model_bert, tokenizer, bert_config = get_models(args, bert_pt_path)
+
 
 
